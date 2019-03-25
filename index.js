@@ -19,17 +19,33 @@ app.use(cors());
 //           })
 
 app.get("/quotes", (req, res) => {
-  fetch("https://andruxnet-random-famous-quotes.p.rapidapi.com/?count=1&cat=famous", {
-    headers: {"X-RapidAPI-Key": "5d54724286mshd1c147c47c2894fp1ee836jsn56baa3f725d7",
-    "Content-Type": "application/x-www-form-urlencoded"
-    },
-    method: "POST"  
-  })
-  .then(r => r.json())
-  .then(j=>{
-    res.json(j)
-  })
+  // fetch("https://andruxnet-random-famous-quotes.p.rapidapi.com/?count=1&cat=famous", {
+  //   headers: {
+  //     "X-RapidAPI-Key": "5d54724286mshd1c147c47c2894fp1ee836jsn56baa3f725d7",
+  //     "Content-Type": "application/x-www-form-urlencoded"
+  //   },
+  //   method: "POST"  
+  // })
+  // .then(r => r.json())
+  // .then(j=>{
+  //   res.json(j)
+  // })
 })
+
+getQuote = (data) => {
+  return fetch(`https://andruxnet-random-famous-quotes.p.rapidapi.com/?count=1&cat=${data}`, {
+    headers: {
+      "X-RapidAPI-Key": "5d54724286mshd1c147c47c2894fp1ee836jsn56baa3f725d7",
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    method: "POST"
+  })
+    .then(r => r.json())
+    .then(j => {
+      console.log(j);
+      return j;
+    })
+}
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"];
@@ -120,12 +136,19 @@ function listMajors(auth) {
       if (rows.length) {
         console.log("Name, Major:");
         // Print columns A and E, which correspond to indices 0 and 4.
-        const json = rows.map(row => {
+        const json = rows.map((row, i) => {
           console.log(`${row[0]}, ${row[1]}`);
-          return { name: row[0], pic: row[1] }; 
-        });
-        app.get("/api", (req, res) => {
-          res.json(json);
+          const obj = { name: row[0], pic: row[1] };
+          getQuote(row[2]).then(r => {
+            obj.quote = r[0].quote;
+            console.log(obj.quote)
+            if (i === rows.length - 1) {
+              app.get("/api", (req, res) => {
+                res.json(json);
+              });
+            }
+          })
+          return obj;
         });
       } else {
         console.log("No data found.");
