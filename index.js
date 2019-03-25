@@ -5,7 +5,31 @@ const cors = require("cors");
 const express = require("express");
 const fetch = require("node-fetch");
 const app = express();
+const unirest = require('unirest');
 app.use(cors());
+
+
+
+// unirest.post(`https://andruxnet-random-famous-quotes.p.rapidapi.com/?count=1&cat=${row[2]}`)
+//           .header("X-RapidAPI-Key", "5d54724286mshd1c147c47c2894fp1ee836jsn56baa3f725d7")
+//           .header("Content-Type", "application/x-www-form-urlencoded")
+//           .end(function (result) {
+//             console.log(result.status, result.headers, result.body);
+//           return result
+//           })
+
+app.get("/quotes", (req, res) => {
+  fetch("https://andruxnet-random-famous-quotes.p.rapidapi.com/?count=1&cat=famous", {
+    headers: {"X-RapidAPI-Key": "5d54724286mshd1c147c47c2894fp1ee836jsn56baa3f725d7",
+    "Content-Type": "application/x-www-form-urlencoded"
+    },
+    method: "POST"  
+  })
+  .then(r => r.json())
+  .then(j=>{
+    res.json(j)
+  })
+})
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"];
@@ -98,7 +122,7 @@ function listMajors(auth) {
         // Print columns A and E, which correspond to indices 0 and 4.
         const json = rows.map(row => {
           console.log(`${row[0]}, ${row[1]}`);
-          return { name: row[0], pic: row[1] };
+          return { name: row[0], pic: row[1] }; 
         });
         app.get("/api", (req, res) => {
           res.json(json);
@@ -114,3 +138,6 @@ const port = 3000;
 app.listen(port, () => {
   console.log(`example app listening on port ${port}`);
 });
+
+
+

@@ -11,6 +11,12 @@ window.addEventListener("load", () => {
       console.log(data)
     });
 });
+fetch("http://localhost:3000/quotes")
+    .then(r => r.json())
+    .then(data => {
+      console.log(data); 
+    });
+
 displayImages = (data) =>{
   data.forEach(image =>{
     document.getElementById("main").innerHTML += `
