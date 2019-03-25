@@ -1,0 +1,14 @@
+{
+  "name": "apitest",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/reykjavik-academy-of-web-development/apitest",
+  "author": "Bjorgvin Atli <bjorgvin773@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "googleapis": "^27.0.0",
+    "node-fetch": "^2.3.0"
+  }
+}
